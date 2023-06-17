@@ -1,0 +1,103 @@
+.table-container{
+	max-width: calc(100% - 273px);
+	width: 100%;
+	padding: 12px;
+
+	display: flex;
+	flex-direction: column;
+}
+@media only screen and (max-width: 1280px) {
+	.table-container{
+		max-width: calc(100% - 273px);
+	}
+}
+
+
+h1{
+	font-size: 32px;
+	margin-top: calc(0.5em - 12px);
+	margin-bottom: 0.6em;
+	text-decoration: underline;
+}
+
+.tool-bar{
+	width: 100%;
+	display: flex;
+	flex-direction: row-reverse;
+}
+
+.tool-bar > a > button{
+	height: 3.5em;
+	padding: 14px;
+	margin-left: 18px;
+	font-size: 13px;
+	box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.6);
+
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	border-radius: 24px;
+	border: none;
+	background-color: #B9EF9A;
+	
+	cursor: pointer;
+	transition: 0.3s;
+}
+.tool-bar > a > button:is(:hover, :active, :focused){
+	background-color: #9DCC82;
+}
+.tool-bar > a > button{
+	display: flex;
+	align-items: center;
+}
+.tool-bar > a > button > span{
+	font-size: 24px;
+	margin-right: 4px;
+}
+
+.table-responsive{
+	width: 100%;
+	max-width: 100%;
+	max-height: calc(100vh - 38px - 45.5px - 130px);
+	margin-top: 16px;
+	overflow: auto;
+}
+table{
+	width: 100%;
+	background-color: #212529;
+	color: #7B8895;
+}
+thead{
+	background-color: #2C3034;
+	font-size: 17px;
+}
+td > div, th > div{
+	display: flex;
+	align-items: center;
+	padding-left: 4px;
+
+	min-width: 8rem;
+	max-width: 16rem;
+	min-height: 40px;
+	max-height: 40px;
+
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+tr > td:first-child > div, th:first-child > div{
+	/* For checkbox selecting */
+	min-width: 2rem;
+	max-width: 2rem;
+	display: flex;
+	flex-direction: row-reverse;
+}
+td > div > div, th > div > div{
+	padding-left: 4px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+tr:nth-child(even){
+	background-color: #2C3034;
+}

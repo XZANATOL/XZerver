@@ -1,0 +1,69 @@
+{% extends 'admin/admin_panel.html' %}
+
+{% block header %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="/auth/static/css/list_tables.css">
+
+<script src="/auth/static/js/list_tables.js" defer></script>
+<script>
+	let csrf_token = "{{ csrf_token() }}"
+</script>
+{% endblock %}
+
+{% block right_panel %}
+<section class="table-container">
+	<h1>{{ title }}</h1>
+
+	<div class="tool-bar">
+		<a href="create">
+			<button>
+					<span>+</span>
+					Create
+			</button>
+		</a>
+		<a>
+			<button>
+					<span>-</span>
+					Delete Selected
+			</button>
+		</a>
+	</div>
+
+	<div class="table-responsive">
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					{% for item in model_columns %}
+					<th><div>{{ item }}</div></th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				{% for record in records %}
+				<tr>
+					<td>
+						<div>
+							<div>
+								<input type="checkbox" name="selected" id="{{ record.attr('id') }}">
+							</div>
+						</div>
+					</td>
+					{% for item in model_columns %}
+					<td>
+						<div>
+							<div>
+								<a href="{{ record.attr('id') }}">
+								{{ record.attr(item) }}
+								</a>
+							</div>
+						</div>
+					</td>
+					{% endfor %}
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</section>
+{% endblock %}

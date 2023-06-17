@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}XZerver - Admin Panel{% endblock %}
+
+{% block header %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="/auth/static/css/admin_panel.css">
+{% endblock %}
+
+{% block body %}
+<main>
+	<section class="side-panel">
+		<p class="username"><a href="{{ url_for('auth.logout') }}">{{ current_user.name }}</a></p>
+
+		<details>
+			<summary>Settings</summary>
+			<ul>
+				<li><a href="{{ url_for('auth.admin') }}/accounts">Accounts</a></li>
+				<li>Configuration</li>
+			</ul>
+		</details>
+	</section>
+	
+	{% block right_panel %}
+	{% endblock %}
+</main>
+{% endblock %}

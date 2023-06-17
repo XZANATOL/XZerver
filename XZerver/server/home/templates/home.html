@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+{{ super() }}
+<link rel="stylesheet" href="/static/css/homepage.css">
+{% endblock %}
+
+{% block title %}XZerver{% endblock %}
+
+{% block body %}
+<main>
+	<section class="user-header">
+		{% if current_user.is_authenticated %}
+		<a href="{{ url_for('auth.logout') }}">{{ current_user.name }}</a>
+		{% else %}
+		<a href="{{ url_for('auth.login') }}">Login</a>
+		{% endif %}
+	</section>
+	<section class="app-menu">
+		<!-- Will be refactored later with grid display to support pagination -->
+		<a class="app-item" href="{{ url_for('xdrive.xdrive_root') }}">
+			<h1>XDrive</h1>
+		</a>
+	</section>
+</main>
+{% endblock %}

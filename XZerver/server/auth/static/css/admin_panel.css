@@ -1,0 +1,37 @@
+main{
+	padding: 2rem;
+	display: flex;
+}
+
+.side-panel{
+	width: 273px;
+	border: 1px solid #efefef;
+	border-radius: 9px;
+	padding: 24px;
+	margin-right: 28px;
+}
+
+.username{
+	width: 100%;
+	text-align: center;
+	color: #efefef;
+	text-decoration: underline;
+	margin-top: 0.5em;
+}
+
+summary{
+	cursor: pointer;
+	color: #efefef;
+}
+li{
+	color: #efefef;
+	text-decoration: underline;
+	cursor: pointer;
+	margin-bottom: 5px;
+}
+
+@media only screen and (max-width: 1280px) {
+  .side-panel{
+  	width: 210px;
+  }
+}

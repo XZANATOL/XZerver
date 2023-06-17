@@ -1,0 +1,22 @@
+
+[project]
+name = "XZerver"
+version = "1.0"
+description = "Multi-Purpose Low-Configuration Server"
+authors = [
+    {name = "XZANATOL", email = "abdelrahmanbedox@gmail.com"},
+]
+dependencies = [
+    "flask-sqlalchemy>=3.0.3",
+    "flask-login>=0.6.2",
+    "flask>=2.3.2",
+    "Flask-WTF>=1.1.1",
+    "email-validator>=2.0.0.post2",
+    "python-dotenv>=1.0.0",
+]
+requires-python = ">=3.10"
+license = {text = "GPL 3.0"}
+
+[tool.pdm.scripts]
+dev = {shell = "flask --app 'XZerver.server_start:create_server' run --debug -p 3000 -h 0.0.0.0"}
+db_migrate = {cmd = "python database.py"}

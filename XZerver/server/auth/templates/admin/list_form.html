@@ -1,0 +1,42 @@
+{% extends 'admin/admin_panel.html' %}
+
+{% block header %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="/auth/static/css/list_form.css">
+{% endblock %}
+
+{% block right_panel %}
+<section class="form-container">
+	<h1>{{ title | title }}</h1>
+
+	<form method="POST">
+		{% for field in form if field.widget.input_type != 'hidden' %}
+		<div class="form-item">
+			<div class="form-cell">
+				{{ field.label }}: {% if field.flags.required %}<span class="required">&nbsp;*</span>{% endif %}
+			</div>
+
+			<div class="form-cell">
+				{{ field }}
+			</div>
+		</div>
+		{% endfor %}
+		{{ form.hidden_tag() }}
+		<div class="submit-container">
+			<a href="#">
+				<button type="submit">Save</button>
+			</a>
+			<a href="..">
+				<button type="button">Cancel</button>
+			</a>
+		</div>
+	</form>
+
+	{% with message = get_flashed_messages() %}
+		{% if message[0] %}
+		<h1>{{ message[0] }}</h1>
+	{% endif %}{% endwith %}
+</section>
+
+
+{% endblock %}

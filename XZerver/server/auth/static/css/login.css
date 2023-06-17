@@ -1,0 +1,134 @@
+main{
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+}
+
+.form-wrapper{
+	width: 35rem;
+	height: 25em;
+	position: relative;
+}
+
+.circle-border{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 45%;
+	height: 50%;
+	border-bottom-right-radius: 80%;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+
+	overflow: hidden;
+	background-color: #1C2025;
+
+	box-shadow: 0 0px 0px rgba(0,0,0), inset -4px -4px 6px rgba(0,0,0,0.16);
+	margin-left: 2px; /* For adjusting with .form-container shadow */
+}
+.circle-border > img{
+	height: 100%;
+	margin-right: 23px;
+	margin-bottom: 10px;
+	transform: scale(1.05);
+}
+
+.cat-modal{
+	position: absolute;
+	top: 9em;
+	left: 8.5rem;
+
+	background-color: #2F2F2F;
+	width: 25rem;
+	opacity: 0.8;
+	z-index: 2;
+
+	border: 1px solid #efefef;
+	border-radius: 16px;
+	padding: 8px;
+	animation: blowUpModal 0.8s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards;
+}
+.cat-modal > h1{
+	color: #e10404;
+	margin: 0;
+}
+@keyframes blowUpModal {
+  0% {
+    transform: scale(0) translateX(-200px) translateY(-80px);
+  }
+  100% {
+    transform: scale(1) translateX(0) translateY(0);
+  }
+}
+
+
+.form-container{
+	width: 100%;
+	height: 100%;
+
+	position: absolute;
+	left: 4px;
+	top: 0px;
+
+	background: #303740;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	border-bottom-right-radius: 28px;
+	box-shadow: 2px 4px 6px rgba(0,0,0,0.16), 2px 4px 6px rgba(0,0,0,0.23);
+}
+.form-container > h1{
+	font-size: 56px;
+	text-decoration: underline;
+	margin-left: auto;
+	margin-right: 3.5rem;
+	margin-top: 0.8em;
+}
+
+form{
+	width: 100%;
+	padding: 16px;
+	margin-top: auto;
+	margin-bottom: 1em;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+form > input{
+	width: 100%;
+	height: 35px;
+	padding: 12px;
+	border-radius: 8px;
+	font-size: 16px;
+	background-color: #0F2A44;
+	color: #efefef;
+	outline: none;
+	border: none;
+	margin-bottom: 15px;
+}
+form > button{
+	height: 35px;
+	width: 7rem;
+	border-radius: 8px;
+
+	outline: none;
+	border: none;
+	cursor: pointer;
+	transition: 0.3s;
+	
+	background-color: #7B8895;
+	color: rgba(239, 239, 239, 0.8);
+	font-size: 18px;
+}
+form > button:is(:hover, :focus, :active){
+	background-color: #646E79;
+}
