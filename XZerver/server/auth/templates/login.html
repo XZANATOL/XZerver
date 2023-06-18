@@ -10,10 +10,10 @@
 		<div class="circle-border">
 			<img src="/auth/static/img/cat.png">
 		</div>
-		{% with message = get_flashed_messages() %}
-		{% if message[0] %}
+		{% with message = get_flashed_messages(True, ['auth_error']) %}
+		{% if message[-1] %}
 		<div class="cat-modal">
-			<h1>{{ message[0] }}</h1>
+			<h1>{{ message[-1][1] }}</h1>
 		</div>
 		{% endif %}
 		{% endwith %}

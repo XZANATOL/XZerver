@@ -26,7 +26,7 @@ csrf = CSRFProtect()
 def isAdmin():
 	""" Middleware to check user is admin """
 	def Redirect():
-		flash("Not an admin user")
+		flash("Not an admin user", "auth_error")
 		return redirect(url_for("home.home_page"))
 	if current_user.is_admin:
 		return None # Don't redirect
@@ -51,7 +51,7 @@ def login():
 				return redirect(next_url)
 			return redirect(url_for("home.home_page"))
 		else:
-			flash("Please check your login credentials and try again.")
+			flash("Please check your login credentials and try again.", "auth_error")
 
 	return render_template("login.html")
 
@@ -89,6 +89,17 @@ def admin_app(app):
 			"title": "User Accounts",
 			"model_columns" : columns,
 			"records": users
+		}
+		return render_template("admin/list_tables.html", **context)
+	elif app == "xdrive":
+		columns = ["path"]
+		folders = config.db.session.execute(
+					config.db.select(config.admn_pnl_mdl_reg[app]["model"])
+			).scalars()
+		context = {
+			"title": "XDrive",
+			"model_columns": columns,
+			"records": folders
 		}
 		return render_template("admin/list_tables.html", **context)
 

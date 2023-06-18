@@ -32,9 +32,9 @@
 		</div>
 	</form>
 
-	{% with message = get_flashed_messages() %}
-		{% if message[0] %}
-		<h1>{{ message[0] }}</h1>
+	{% with message = get_flashed_messages(True, ['success', 'error']) %}
+		{% if message[-1] %}
+		<h1>{{ message[-1][1] }}</h1>
 	{% endif %}{% endwith %}
 </section>
 

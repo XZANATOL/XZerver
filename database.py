@@ -3,6 +3,7 @@ server = create_server()
 
 from werkzeug.security import generate_password_hash
 from XZerver.server.auth.models import User
+from XZerver.server.xdrive.models import SharedFolder
 from XZerver import config
 
 from dotenv import load_dotenv

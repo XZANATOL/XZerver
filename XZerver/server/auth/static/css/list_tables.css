@@ -85,10 +85,16 @@ td > div, th > div{
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+tr > td:first-child, tr > th:first-child{
+	min-width: 2rem;
+	max-width: 2rem;
+	width: 2rem;
+}
 tr > td:first-child > div, th:first-child > div{
 	/* For checkbox selecting */
 	min-width: 2rem;
 	max-width: 2rem;
+	width: 2rem;
 	display: flex;
 	flex-direction: row-reverse;
 }

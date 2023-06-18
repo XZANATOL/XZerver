@@ -64,14 +64,16 @@ $ pdm run dev
 )
 ```
 
-3) Register the app in `server_start.py`. (Lines should be ~#29)
+3) **Not Implemented Yet** Add admin panel configuration in `admin.py`
+
+4) Register the app in `server_start.py`. (Lines should be ~#29)
    `Here to make the app accessible from Flask`
 ```
 from XZerver.server.<app>.routes import <app_name> as <app_name>_blueprint
 blueprints = [..., <app_name>_blueprint]
 ```
 
-4) Scroll down to line ~#50 and add relevant configuration for app models. 
+5) Scroll down to line ~#50 and add relevant configuration for app models. 
    `Here to make the app models accessible from the admin panel`
 ```
 from XZerver.server.<app>.models import <model> as <app_name>Model
