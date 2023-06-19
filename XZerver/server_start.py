@@ -49,11 +49,13 @@ def create_server():
 
     # Admin panel config
     from XZerver.server.auth.forms import UserFrom as auth_UserFrom
+
     from XZerver.server.xdrive.forms import SharedFolderForm
     from XZerver.server.xdrive.models import SharedFolder
+    from XZerver.server.xdrive.admin import xdrive_admin
     items = {
         "accounts": {"model": auth_User, "form": auth_UserFrom},
-        "xdrive": {"model": SharedFolder, "form": SharedFolderForm}
+        "xdrive": {"model": SharedFolder, "form": SharedFolderForm, "admin": xdrive_admin}
     }
 
     for key, value in items.items():

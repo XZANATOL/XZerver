@@ -8,6 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.datastructures import ImmutableMultiDict
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_wtf.csrf import CSRFProtect
+from wtforms.validators import ValidationError
 from sqlalchemy import desc
 from XZerver import config
 
@@ -91,19 +92,17 @@ def admin_app(app):
 			"records": users
 		}
 		return render_template("admin/list_tables.html", **context)
-	elif app == "xdrive":
-		columns = ["path"]
-		folders = config.db.session.execute(
-					config.db.select(config.admn_pnl_mdl_reg[app]["model"])
-			).scalars()
+	else:
+		if not config.admn_pnl_mdl_reg.get(app):
+			return redirect(url_for("auth.admin"))
+
+		# Should return model columns and records
+		context = config.admn_pnl_mdl_reg[app]["admin"]()
 		context = {
-			"title": "XDrive",
-			"model_columns": columns,
-			"records": folders
+			"title": app,
+			**context
 		}
 		return render_template("admin/list_tables.html", **context)
-
-	return redirect(url_for("auth.admin"))
 
 
 @auth.route("/admin/<string:app>/create/", methods=['GET', 'POST'])
@@ -127,10 +126,15 @@ def admin_app_create(app):
 
 		form = app_form(post_form)
 		if form.validate():
+			form_valid = True
 			record = config.admn_pnl_mdl_reg[app]["model"]()
 			form.populate_obj(record)
+		else:
+			form_valid = False
 
 		try:
+			if not form_valid:
+				raise ValidationError("Invalid Form")
 			config.db.session.add(record)
 			config.db.session.commit()
 			flash("Record Added", category="success")
@@ -208,9 +212,14 @@ def admin_app_edit(app, item_id):
 
 		form = app_form(post_form)
 		if form.validate():
+			form_valid = True
 			form.populate_obj(item)
+		else:
+			form_valid = False
 
 		try:
+			if not form_valid:
+				raise ValidationError("Invalid Form")
 			config.db.session.add(item)
 			config.db.session.commit()
 			flash("Record Added", category="success")

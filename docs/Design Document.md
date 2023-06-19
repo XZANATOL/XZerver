@@ -51,7 +51,7 @@ $ pdm run dev
 	* `forms.py`: to save app forms. (each form should inherit `CSRFSessionBaseForm` to apply CSRF protection)
 	* `models.py`: to save app models.
 	* `routes.py`: to save app routes.
-	* `admin.py`: to save app admin settings in the admin panel **(Not Implemented Yet)**
+	* `admin.py`: to save app admin settings in the admin panel.
 
 2) `routes.py` should have these lines to be able to register the app in the `server_start.py` configuration.
 ```
@@ -64,7 +64,26 @@ $ pdm run dev
 )
 ```
 
-3) **Not Implemented Yet** Add admin panel configuration in `admin.py`
+3) Add admin panel configuration in `admin.py`
+```
+from XZerver import config
+
+def <app>_admin():
+	columns = [<columns_to_view>]
+	folders = config.db.session.execute(
+			config.db.select(config.admn_pnl_mdl_reg[app]["model"])
+					.order_by(desc(
+						config.admn_pnl_mdl_reg[app]["model"].id)
+					)
+		).scalars()
+	context = {
+		"title": "XDrive", # Optional
+		# Mandatory to define these
+		"model_columns": columns,
+		"records": folders
+	}
+	return context
+```
 
 4) Register the app in `server_start.py`. (Lines should be ~#29)
    `Here to make the app accessible from Flask`
@@ -78,12 +97,19 @@ blueprints = [..., <app_name>_blueprint]
 ```
 from XZerver.server.<app>.models import <model> as <app_name>Model
 from XZerver.server.<app>.forms import <app_form> as <app_name>From
+from XZerver.server.<app>.admin import <app_admin>Function
 items = {..., 
 	<app_name>: {
 				"model": <app_name>Model, 
-				"form": <app_name>From
+				"form": <app_name>From,
+				"admin": <app_admin>Function
 				}
 }
+```
+
+6) Edit `XZerver/server/auth/templates/admin_panel.html` and add a link corresponding to your app name. ~#25.
+```
+<li><a href="{{ url_for('auth.admin') }}/<app_name>/"><app_name></a></li>
 ```
 
 ### Creating Database

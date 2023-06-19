@@ -20,7 +20,6 @@ form{
 
 .form-item{
 	width: 100%;
-	height: 3.7em;
 
 	display: flex;
 	flex-direction: row;
@@ -33,7 +32,6 @@ form{
 .form-cell{
 	width: 10rem;
 	max-width: 10rem;
-	height: 100%;
 
 	display: flex;
 	align-items: center;
@@ -45,11 +43,16 @@ form{
 	overflow: hidden;
 	white-space: nowrap;
 }
+.form-cell:first-child{
+	height: 3.7em;
+	max-height: 3.7em;
+}
 .form-cell:nth-child(2){
 	width: 15rem;
 	max-width: 15rem;
 }
-.form-cell > input[type]:not([type="checkbox"], [type="radio"]){
+.form-cell > input[type]:not([type="checkbox"], [type="radio"]),
+.form-cell > textarea{
 	width: 100%;
 	height: 35px;
 	padding: 12px;
@@ -59,6 +62,9 @@ form{
 	color: #efefef;
 	outline: none;
 	border: none;
+}
+.form-cell > textarea{
+	margin-top: 5px;
 }
 .required{
 	color: #e10404;
