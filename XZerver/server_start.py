@@ -2,6 +2,7 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 from datetime import timedelta
+from os import getenv
 
 from XZerver import config
 
@@ -13,7 +14,7 @@ def create_server():
         static_folder='static_global',
         static_url_path='/static_global/'
         )
-    server.config["SECRET_KEY"] = "d992078550714a11c2fb599dc8a567cd8ec83d348d47bc3014964ccc693c02dc"
+    server.config["SECRET_KEY"] = getenv("server_secret_key")
     server.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./db.sqlite"
     server.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
     server.config["REMEMBER_COOKIE_DURATION"] = timedelta(minutes=10)

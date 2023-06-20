@@ -11,4 +11,6 @@
 
 * An ouch moment, Flask doesn't have Middleware support out-of-the-box so I had to improvise a bit. Check `auth/auth.py` -> function at #26.
 
-* Jinja2 has access to objects & variables defined in the scope of the file that called it.
+* Jinja2 has access to a Flask config object that contains further functionalities of apps initialized in it.
+
+* Reference to JSON querying in [SQLite3](https://www.sqlite.org/json1.html#jeach).

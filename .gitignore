@@ -1,5 +1,7 @@
 # App related files
 instance/
+docs/.obsidian
+docs/ToDo.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
