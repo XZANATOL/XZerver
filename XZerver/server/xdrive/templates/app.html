@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block header %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="/xdrive/static/css/app.css">
+{% endblock %}
+
+{% block body %}
+<main>
+	<section class="left-panel">
+		<h1>XDrive</h1>
+		<p><a href="{{ url_for('auth.logout') }}">{{ current_user.name }}</a></p>
+	</section>
+
+	<section class="file-explorer">
+		<input type="text" name="searchbar">
+		<div class="table-responsive">
+			<table>
+				<thead>
+					<tr>
+						<th></th>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Size</th>
+						<th>Date Modified</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td></td>
+						<td><div>
+							
+						</div></td>
+						<td><div>
+
+						</div></td>
+						<td><div>
+
+						</div></td>
+						<td><div>
+
+						</div></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+			
+	</section>
+</main>
+{% endblock %}

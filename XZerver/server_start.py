@@ -19,6 +19,7 @@ def create_server():
     server.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
     server.config["REMEMBER_COOKIE_DURATION"] = timedelta(minutes=10)
     server.config["REMEMBER_COOKIE_REFRESH_EACH_REQUEST"] = True
+    server.config["REMEMBER_COOKIE_SAMESITE"] = None
     server.config['SESSION_PERMANENT'] = True
 
     # Extensions & Config init
@@ -30,7 +31,7 @@ def create_server():
     # from path.file import Blueprint as X
     from XZerver.server.home.routes import home as home_blueprint
     from XZerver.server.auth.routes import auth as auth_blueprint
-    from XZerver.server.xdrive.xdrive import xdrive as xdrive_blueprint
+    from XZerver.server.xdrive.routes import xdrive as xdrive_blueprint
 
     blueprints = [
         home_blueprint,

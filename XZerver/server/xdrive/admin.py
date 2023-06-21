@@ -2,7 +2,7 @@ from sqlalchemy import desc
 from XZerver import config
 
 def xdrive_admin():
-	columns = ["path"]
+	columns = ["name", "path"]
 	folders = config.db.session.execute(
 			config.db.select(config.admn_pnl_mdl_reg["xdrive"]["model"])
 					.order_by(desc(
