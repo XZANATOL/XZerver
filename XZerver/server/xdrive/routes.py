@@ -26,18 +26,22 @@ def file_explorer():
 	"""
 	returns directory structure
 	{
+		"status_code": int,
 		"directory": [
 			{
 				"name": str,
 				"type": str,
 				"path": str,
-				"size": int, 		#None in case of dir
+				"size": int, 		# None in case of dir
 				"dt_modified": str
 			}
 		]
 	}
 	"""
-	directory = []
+	res = {
+		"status_code": 200,
+		"directory": []
+	}
 	if request.args.get("path") in ["", None]:
 		records = config.db.session.execute(
 				text(f"""
@@ -46,7 +50,7 @@ def file_explorer():
 					WHERE json_each.key LIKE '{current_user.id}';""")
 			)
 		for folder_id, name in records:
-			directory.append({
+			res["directory"].append({
 				"name": name,
 				"type": "dir",
 				"path": folder_id,
@@ -54,4 +58,4 @@ def file_explorer():
 				"dt_modified": "-"
 				})
 
-	return directory
+	return res

@@ -3,6 +3,8 @@
 {% block header %}
 {{ super() }}
 <link rel="stylesheet" type="text/css" href="/xdrive/static/css/app.css">
+
+<script src="/xdrive/static/js/app.js" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -13,16 +15,16 @@
 	</section>
 
 	<section class="file-explorer">
-		<input type="text" name="searchbar">
+		<input type="text" name="locationbar">
 		<div class="table-responsive">
 			<table>
 				<thead>
 					<tr>
 						<th></th>
-						<th>Name</th>
-						<th>Type</th>
-						<th>Size</th>
-						<th>Date Modified</th>
+						<th><div>Name</div></th>
+						<th><div>Type</div></th>
+						<th><div>Size</div></th>
+						<th><div>Date Modified</div></th>
 					</tr>
 				</thead>
 				<tbody>
