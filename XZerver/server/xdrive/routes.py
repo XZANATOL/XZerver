@@ -1,6 +1,6 @@
 from flask import (
-	Blueprint, render_template,
-	request, flash
+	Blueprint, render_template, send_file, Response,
+	request, flash,
 )
 from flask_login import current_user, login_required
 from sqlalchemy.sql import text
@@ -15,6 +15,30 @@ xdrive = Blueprint(
 	static_url_path='static/',
 	template_folder="templates"
 	)
+
+def path_sanitizer(path) -> str:
+	""" Sanitizing path before processing to avoid SQL Injection & Path Traversal. """
+	try:
+		path = path.replace("../", "").replace("..", "").split("/")
+		path_from_db = int(path.pop(0))
+		path = "/".join(path)
+
+		absolute_path = config.db.session.execute(
+				text(f"""
+					SELECT shared_folder.path
+					FROM shared_folder, json_each(shared_folder.permissions)
+					WHERE json_each.key LIKE '{current_user.id}' AND shared_folder.id = '{path_from_db}';
+					""")
+			).scalar()
+		if absolute_path == "":
+			directory = ""
+		else:
+			directory = os.path.join(f"{absolute_path}/{path}")
+	except:
+		directory = ""
+	finally:
+		return directory
+
 
 @xdrive.route("/", methods=["GET"])
 @login_required
@@ -60,23 +84,10 @@ def file_explorer():
 				"dt_modified": "-"
 				})
 	else:
-		# Sanitizing path before processing to avoid SQL Injection.
 		path = request.args.get("path")
-		path = path.replace("../", "").replace("..", "").split("/")
+		directory_abs_path = path_sanitizer(path)
 		try:
-			path_from_db = int(path.pop(0))
-			path = "/".join(path)
-
-			absolute_path = config.db.session.execute(
-					text(f"""
-						SELECT shared_folder.path
-						FROM shared_folder, json_each(shared_folder.permissions)
-						WHERE json_each.key LIKE '{current_user.id}' AND shared_folder.id = '{path_from_db}';
-						""")
-				).scalar()
-			directory = os.path.join(f"{absolute_path}/{path}")
-
-			directortyItems = next(os.walk(directory))
+			directortyItems = next(os.walk(directory_abs_path))
 		except Exception as e:
 			print("error:", e)
 			res["status_code"] = 404
@@ -98,7 +109,7 @@ def file_explorer():
 					"type": "dir",
 					"path": folder,
 					"size": None,
-					"dt_modified": datetime.fromtimestamp(os.path.getmtime(f"{directory}/{folder}"))
+					"dt_modified": datetime.fromtimestamp(os.path.getmtime(f"{directory_abs_path}/{folder}"))
 					})
 
 			# Files
@@ -107,7 +118,17 @@ def file_explorer():
 					"name": file,
 					"type": file.split(".")[-1],
 					"path": file,
-					"size": str(round(os.path.getsize(f"{directory}/{file}")/1024, 2))+" KB",
-					"dt_modified": datetime.fromtimestamp(os.path.getmtime(f"{directory}/{file}"))
+					"size": str(round(os.path.getsize(f"{directory_abs_path}/{file}")/1024, 2))+" KB",
+					"dt_modified": datetime.fromtimestamp(os.path.getmtime(f"{directory_abs_path}/{file}"))
 					})
 	return res
+
+
+@xdrive.route("/download", methods=["GET"])
+@login_required
+def xdrive_download():
+	path = request.args.get("path")
+	path = path_sanitizer(path)
+	if os.path.isfile(path):
+		return send_file(path)
+	return Response("Not Found!", status=404)

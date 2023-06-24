@@ -16,7 +16,7 @@ function clearSelections(){
 }
 
 
-async function getSharedFolders(path="") {
+async function getSharedItems(path="") {
 	let queryEndpoint = `${location.origin}/${location.pathname}path?path=`
 
 	let locationBar = document.querySelector("input[name='locationbar']")
@@ -46,6 +46,17 @@ async function getSharedFolders(path="") {
 	})
 	records = await records.json()
 	updateExplorer(records.directory)
+}
+
+
+function getFile(filename){
+	let queryEndpoint = `${location.origin}/${location.pathname}download?path=`
+	const locationBar = document.querySelector("input[name='locationbar']").value
+	queryEndpoint += `${locationBar}${filename}`
+	const link = document.createElement("a")
+	link.href = queryEndpoint
+	link.target = "_blank"
+	link.click()
 }
 
 
@@ -93,15 +104,15 @@ function updateExplorer(records){
 			}else{
 				if(event.target.tagName == "TD"){
 					if(event.target.parentElement.childNodes[2].innerText == "dir"){
-						getSharedFolders(event.target.parentElement.id)
+						getSharedItems(event.target.parentElement.id)
 					}else{
-						console.log("TD file")
+						getFile(event.target.parentElement.childNodes[1].innerText)
 					}		
 				}else{
 					if(event.target.parentElement.parentElement.childNodes[2].innerText == "dir"){
-						getSharedFolders(event.target.parentElement.parentElement.id)
+						getSharedItems(event.target.parentElement.parentElement.id)
 					}else{
-						console.log("TD > DIV file")
+						getFile(event.target.parentElement.parentElement.childNodes[1].innerText)
 					}
 				}
 			}
@@ -113,5 +124,5 @@ function updateExplorer(records){
 
 
 window.onload = async (event) => {
-	await getSharedFolders("")
+	await getSharedItems("")
 }

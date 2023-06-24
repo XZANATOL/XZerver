@@ -14,3 +14,7 @@
 * Jinja2 has access to a Flask config object that contains further functionalities of apps initialized in it.
 
 * Reference to JSON querying in [SQLite3](https://www.sqlite.org/json1.html#jeach).
+
+* When adding event listeners to elements in loops, don't use any defined variables used in the loop as the JS interpreter will run them depending on the last value it reaches in the last iteration.
+
+* Flask `send_file()` method automatically defines the file size headers, and can be used for resume-able downloads.
