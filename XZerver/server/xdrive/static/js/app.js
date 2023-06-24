@@ -6,7 +6,6 @@ function checkedItemChecker(element){
 	}else{
 		global_selected.delete(element.id)
 	}
-	console.log(global_selected)
 }
 function clearSelections(){
 	global_selected.clear()
@@ -20,15 +19,28 @@ function clearSelections(){
 async function getSharedFolders(path="") {
 	let queryEndpoint = `${location.origin}/${location.pathname}path?path=`
 
-	locationBar = document.querySelector("input[name='locationbar']")
-	queryEndpoint += locationBar.value
-	queryEndpoint += path
+	let locationBar = document.querySelector("input[name='locationbar']")
+	let directoryPath = "";
 
-	if (path != ""){
-		locationBar.value += `${path}/`
+	if(path == ".."){
+		directoryPath = locationBar.value.split("/")
+		directoryPath.splice(directoryPath.length-2, 2)
+		directoryPath = directoryPath.join("/")
+	}else{
+		directoryPath = `${locationBar.value}${path}`
 	}
 
-	console.log(queryEndpoint)
+	if(
+		((locationBar.value == "") && (path == "" || path == ".."))
+		||
+		(path == ".." && directoryPath == "")
+	){
+		locationBar.value = ""
+	}else{
+		locationBar.value = `${directoryPath}/`
+	}
+
+	queryEndpoint += directoryPath
 	let records = await fetch(queryEndpoint, {
 		credentials: "same-origin"
 	})
@@ -79,7 +91,19 @@ function updateExplorer(records){
 				checkbox.checked = true
 				checkedItemChecker(checkbox)
 			}else{
-				console.log("hi")
+				if(event.target.tagName == "TD"){
+					if(event.target.parentElement.childNodes[2].innerText == "dir"){
+						getSharedFolders(event.target.parentElement.id)
+					}else{
+						console.log("TD file")
+					}		
+				}else{
+					if(event.target.parentElement.parentElement.childNodes[2].innerText == "dir"){
+						getSharedFolders(event.target.parentElement.parentElement.id)
+					}else{
+						console.log("TD > DIV file")
+					}
+				}
 			}
 		})
 
@@ -89,5 +113,5 @@ function updateExplorer(records){
 
 
 window.onload = async (event) => {
-	await getSharedFolders()
+	await getSharedFolders("")
 }
