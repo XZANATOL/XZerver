@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_login import LoginManager
-from flask_wtf.csrf import CSRFProtect
 from datetime import timedelta
 from os import getenv
 
@@ -21,12 +20,12 @@ def create_server():
     server.config["REMEMBER_COOKIE_REFRESH_EACH_REQUEST"] = True
     server.config["REMEMBER_COOKIE_SAMESITE"] = None
     server.config['SESSION_PERMANENT'] = True
+    server.config['UPLOADS_DEFAULT_DEST'] = '/mnt/f/xzerver_test'
 
     # Extensions & Config init
-    csrf = CSRFProtect()
     config.init()
     config.db.init_app(server)
-    csrf.init_app(server)
+    config.csrf.init_app(server)
 
     # from path.file import Blueprint as X
     from XZerver.server.home.routes import home as home_blueprint

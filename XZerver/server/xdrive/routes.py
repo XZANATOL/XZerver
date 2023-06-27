@@ -6,6 +6,7 @@ from flask_login import current_user, login_required
 from sqlalchemy.sql import text
 from XZerver import config
 from datetime import datetime
+from shutil import disk_usage
 import os
 
 xdrive = Blueprint(
@@ -27,10 +28,12 @@ def path_sanitizer(path) -> str:
 				text(f"""
 					SELECT shared_folder.path
 					FROM shared_folder, json_each(shared_folder.permissions)
-					WHERE json_each.key LIKE '{current_user.id}' AND shared_folder.id = '{path_from_db}';
+					WHERE json_each.key = '{current_user.id}'
+						AND shared_folder.id = '{path_from_db}'
+					LIMIT 1;
 					""")
 			).scalar()
-		if absolute_path == "":
+		if absolute_path is None:
 			directory = ""
 		else:
 			directory = os.path.join(f"{absolute_path}/{path}")
@@ -39,6 +42,26 @@ def path_sanitizer(path) -> str:
 	finally:
 		return directory
 
+
+def user_has_write_privilage(path) -> bool:
+	""" Checking if user has write access to the provided path """
+	try:
+		path_from_db = int(path.replace("../", "").replace("..", "").split("/")[0])
+		has_access = config.db.session.execute(
+				text(f"""
+					SELECT shared_folder.id
+					FROM shared_folder, json_each(shared_folder.permissions)
+					WHERE json_each.key LIKE '{current_user.id}'
+						AND shared_folder.id = '{path_from_db}'
+						AND json_each.value LIKE '%"write"%'
+					LIMIT 1;
+					""")
+			).scalar()
+		if has_access is None:
+			return False
+		return True
+	except:
+		return False
 
 @xdrive.route("/", methods=["GET"])
 @login_required
@@ -61,19 +84,29 @@ def file_explorer():
 				"size": str, 		# None in case of dir
 				"dt_modified": str
 			}
-		]
+		],
+		"stats": {
+			"usedspace": int,
+			"freespace": int
+		},
+		"write_acess": bool
 	}
 	"""
 	res = {
 		"status_code": 200,
-		"directory": []
+		"directory": [],
+		"stats": {
+			"usedspace": 0,
+			"freespace": 0
+		},
+		"write_access": False
 	}
 	if request.args.get("path") in ["", None]:
 		records = config.db.session.execute(
 				text(f"""
 					SELECT shared_folder.id, shared_folder.name
 					FROM shared_folder, json_each(shared_folder.permissions)
-					WHERE json_each.key LIKE '{current_user.id}';""")
+					WHERE json_each.key = '{current_user.id}';""")
 			)
 		for folder_id, name in records:
 			res["directory"].append({
@@ -87,7 +120,10 @@ def file_explorer():
 		path = request.args.get("path")
 		directory_abs_path = path_sanitizer(path)
 		try:
-			directortyItems = next(os.walk(directory_abs_path))
+			if os.path.isdir(directory_abs_path):
+				directortyItems = next(os.walk(directory_abs_path))
+			else:
+				raise ValueError("Invalid Path")
 		except Exception as e:
 			print("error:", e)
 			res["status_code"] = 404
@@ -121,6 +157,13 @@ def file_explorer():
 					"size": str(round(os.path.getsize(f"{directory_abs_path}/{file}")/1024, 2))+" KB",
 					"dt_modified": datetime.fromtimestamp(os.path.getmtime(f"{directory_abs_path}/{file}"))
 					})
+
+			total_bytes, used_bytes, free_bytes = disk_usage(directory_abs_path)
+			res["stats"] = {
+				"usedspace": round(used_bytes / 1_000_000_000, 2), # for MB
+				"freespace": round(free_bytes / 1_000_000_000, 2)
+			}
+			res["write_access"] = user_has_write_privilage(path)
 	return res
 
 
@@ -132,3 +175,31 @@ def xdrive_download():
 	if os.path.isfile(path):
 		return send_file(path)
 	return Response("Not Found!", status=404)
+
+
+@xdrive.route("/has_write_access", methods=["GET"])
+@login_required
+def has_write_access():
+	""" 
+	* This function was made for the SPA to
+	check for write access before sending a file.
+	* Same check will be done in the upload view
+	to avoid malicious approaches to the API. 
+	"""
+	path = request.args.get("path")
+	return {"access": user_has_write_privilage(path)}
+
+
+@xdrive.route("/upload", methods=["POST"])
+@login_required
+@config.csrf.exempt
+def xdrive_upload():
+	path = request.args.get("path")
+	if user_has_write_privilage(path):
+		path = path_sanitizer(path)
+		if os.path.isdir(path) and "file" in request.files:
+			file = request.files.get("file")
+			file.save(f"{path}{file.filename}")
+			return Response("Success", status=200)
+		return Response("Invalid Path", status=404)
+	return Response("Not Allowed!", status=405)

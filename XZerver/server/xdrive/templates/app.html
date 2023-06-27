@@ -12,6 +12,7 @@
 	<section class="left-panel">
 		<h1>XDrive</h1>
 		<p><a href="{{ url_for('auth.logout') }}">{{ current_user.name }}</a></p>
+		<ul id="properties"></ul>
 	</section>
 
 	<section class="file-explorer">
@@ -31,7 +32,11 @@
 				</tbody>
 			</table>
 		</div>
-			
+		<div class="upload">
+			<label for="uploadinput">+ Click to Select Files</label>
+			<input type="file" name="files" id="uploadinput" hidden multiple>
+			<button id="upload">Upload</button>
+		</div>
 	</section>
 </main>
 {% endblock %}
