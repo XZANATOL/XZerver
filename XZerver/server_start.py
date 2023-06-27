@@ -20,7 +20,6 @@ def create_server():
     server.config["REMEMBER_COOKIE_REFRESH_EACH_REQUEST"] = True
     server.config["REMEMBER_COOKIE_SAMESITE"] = None
     server.config['SESSION_PERMANENT'] = True
-    server.config['UPLOADS_DEFAULT_DEST'] = '/mnt/f/xzerver_test'
 
     # Extensions & Config init
     config.init()

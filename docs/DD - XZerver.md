@@ -124,3 +124,13 @@ from XZerver.server.<app>.models import <ModelName>
 2) Create `.env` file and define these 3 keys: `db_seed_name`, `db_seed_email`, `db_seed_password`.
 
 3) Run `pdm run db_migrate` to build the database. You should find it in a newly created folder called `instance`.
+
+### Global Variables
+
+Project comes with configurable global variables that can be accessed in your app via importing `from XZerver import config`. The config file provides:
+
+1) **db**: A `SQLAlchemy` instance that has access to the SQLite database created by `database.py`.
+
+2) **csrf**: A `CSRFProtect` instance that can be configured across apps to add/remove CSRF token from forms.
+
+3) **admn_pnl_mdl_reg**: An *admin-only* variable that contains data about registered apps. It's mainly used in the admin app.

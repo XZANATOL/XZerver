@@ -18,3 +18,5 @@
 * When adding event listeners to elements in loops, don't use any defined variables used in the loop as the JS interpreter will run them depending on the last value it reaches in the last iteration.
 
 * Flask `send_file()` method automatically defines the file size headers, and can be used for resume-able downloads.
+
+* Learned a lot about how servers receive requests through streaming before processing. Temp directories have a lot of benefits when it comes to storing data coming from networks. I'm sure going to write a blog on that.  

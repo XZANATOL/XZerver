@@ -160,7 +160,7 @@ def file_explorer():
 
 			total_bytes, used_bytes, free_bytes = disk_usage(directory_abs_path)
 			res["stats"] = {
-				"usedspace": round(used_bytes / 1_000_000_000, 2), # for MB
+				"usedspace": round(used_bytes / 1_000_000_000, 2), # for GB
 				"freespace": round(free_bytes / 1_000_000_000, 2)
 			}
 			res["write_access"] = user_has_write_privilage(path)
