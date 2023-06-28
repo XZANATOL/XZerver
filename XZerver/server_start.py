@@ -20,6 +20,7 @@ def create_server():
     server.config["REMEMBER_COOKIE_REFRESH_EACH_REQUEST"] = True
     server.config["REMEMBER_COOKIE_SAMESITE"] = None
     server.config['SESSION_PERMANENT'] = True
+    server.config['MAX_CONTENT_LENGTH'] = 30 * 1024 * 1024 * 1024
 
     # Extensions & Config init
     config.init()
