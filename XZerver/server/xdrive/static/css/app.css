@@ -27,6 +27,7 @@ p{
 	padding: 24px;
 	padding-top: 35px;
 	margin-right: 28px;
+	position: relative;
 }
 .file-explorer{
 	width: 100%;
@@ -51,6 +52,40 @@ ul{
 }
 li{
 	margin-bottom: 0.3em;
+}
+
+.notfi{
+	width: 100%;
+	max-height: 15em;
+
+	position: absolute;
+	bottom: 1em;
+	padding-right: 0.5rem;
+	color: #efefef;
+	overflow-y: auto;
+}
+.notfi-item{
+	width: 100%;
+	min-height: 3em;
+
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	background-color: #262C32;
+}
+.notfi-item-del{
+	height: 100%;
+	width: 2rem;
+	border: none;
+	cursor: pointer;
+	background-color: transparent;
+	color: #efefef;
+}
+.notfi-item-span{
+	width: 100%;
+	margin-bottom: 0.2em;
+	margin-left: 0.5rem;
 }
 
 @media only screen and (max-width: 1280px) {

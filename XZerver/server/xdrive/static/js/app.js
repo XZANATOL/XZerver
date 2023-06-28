@@ -48,14 +48,20 @@ async function getSharedItems(path="") {
 	let records = await fetch(queryEndpoint, {
 		credentials: "same-origin"
 	})
-	records = await records.json()
+	.then(res => {
+		return res.json()
+	})
+	.catch(err => {
+		notifyCardFactory(`Error: ${err}`)
+	})
+
 	updateExplorer(records.directory, records.stats)
 	uploaderUpdater(records.write_access)
 }
 
 
 function getFile(filename){
-	let queryEndpoint = `${location.origin}/${location.pathname}download?path=`
+	let queryEndpoint = `${location.origin}${location.pathname}download?path=`
 	const locationBar = document.querySelector("input[name='locationbar']").value
 	queryEndpoint += `${locationBar}${filename}`
 	const link = document.createElement("a")
@@ -163,6 +169,29 @@ function uploaderUpdater(access){
 }
 
 
+function notifyCardFactory(text){
+	let notifyPanel = document.querySelector(".notfi")
+	let notifyCard = document.createElement("div")
+	notifyCard.classList.add("notfi-item")
+
+	let notifyDeleteButton = document.createElement("button")
+	notifyDeleteButton.classList.add("notfi-item-del")
+	notifyDeleteButton.innerText = "X"
+	notifyDeleteButton.addEventListener("click", (e) => {
+		e.target.parentElement.remove()
+	})
+
+	let notifySpan = document.createElement("span")
+	notifySpan.classList.add("notfi-item-span")
+	notifySpan.innerText = text
+
+	notifyCard.appendChild(notifyDeleteButton)
+	notifyCard.appendChild(notifySpan)
+	notifyPanel.appendChild(notifyCard)
+	return notifyCard
+}
+
+
 async function uploadItems() {
 	const uploadEndpoints = `${location.origin}/${location.pathname}`
 	const uploadInput = document.querySelector("#uploadinput").files
@@ -171,20 +200,54 @@ async function uploadItems() {
 	let checkWriteAccess = await fetch(`${uploadEndpoints}has_write_access?path=${locationBar}`, {
 		credentials: "same-origin"
 	})
-	checkWriteAccess = await checkWriteAccess.json()
-	if (checkWriteAccess.access){
-		Array.from(uploadInput).forEach(async (file) => {
-			const formData = new FormData();
-			formData.append('file', file);
+	.then(res => {
+		return res.json()
+	})
+	.catch(err => {
+		notifyCardFactory(`Error: ${err}`)
+	})
 
-			let res = await fetch(`${uploadEndpoints}upload?path=${locationBar}`, {
-				credentials: "same-origin",
-				method: "POST",
-				body: formData,
-			}).then(() => {
-				getSharedItems("")
+	if (!checkWriteAccess.access){
+		notifyCardFactory("You don't have write access to this directory")
+	}
+	else{
+
+		const asyncXHR = (file) => {
+			return new Promise((resolve, reject) => {
+				let card = notifyCardFactory(`Uploading file: ${file.name}`)
+				let button = card.querySelector("button")
+				let sendFile = new XMLHttpRequest()
+				sendFile.open("POST", `${uploadEndpoints}upload?path=${locationBar}`, true)
+				sendFile.setRequestHeader("credentials", "same-origin")
+				sendFile.onload = () => {
+					getSharedItems("")
+				}
+				sendFile.onerror = () => {
+					console.error(sendFile.statusText)
+				}
+				sendFile.upload.onprogress = e => {
+					if(e.lengthComputable){
+						card.querySelector("span").innerText = `Sending file: ${file.name}\n${Math.round(e.loaded / 1_000_000, 2)} / ${Math.round(e.total / 1_000_000, 2)} MB`
+					}
+				}
+				const formData = new FormData();
+				formData.append('file', file);
+				button.addEventListener("click", (e) => {
+					sendFile.abort()	
+				})
+				
+				sendFile.send(formData)
 			})
+		}
+
+		Array.from(uploadInput).forEach(async (file) => {
+			try{
+				await asyncXHR(file)
+			}catch (err) {
+				console.error(err)
+			}
 		})
+
 	}
 }
 

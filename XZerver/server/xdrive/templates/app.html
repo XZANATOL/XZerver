@@ -13,10 +13,12 @@
 		<h1>XDrive</h1>
 		<p><a href="{{ url_for('auth.logout') }}">{{ current_user.name }}</a></p>
 		<ul id="properties"></ul>
+		<div class="notfi">
+		</div>
 	</section>
 
 	<section class="file-explorer">
-		<input type="text" name="locationbar">
+		<input type="text" name="locationbar" disabled>
 		<div class="table-responsive">
 			<table>
 				<thead>

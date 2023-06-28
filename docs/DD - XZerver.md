@@ -13,14 +13,15 @@ Currently, I'm planning of adding a file-sharing app like Google Drive but with 
 
 ## Tools
 
-* Python because I'm more comfortable using it in OOP.
-* To ensure structure flexibility, Flask was the framework of choice over Django:
+* **Python** because I'm more comfortable using it in OOP.
+* To ensure structure flexibility, **Flask** was the framework of choice over Django:
 	* It's not a battery framework as Django, So no issues of having features I won't use.
 	* Provides Blueprints for a flexible project structure.
 	* Ability to add specific batteries to boost development.
 	* (Trying to avoid) Can add 3rd party libraries.
-* PDM as a package manager, for virtual environments and deployment on other machines.
-* SQLite3 because it's underrated for self-hosted projects.
+* **PDM** as a package manager, for virtual environments and deployment on other machines.
+* **SQLite3** because it's underrated for self-hosted projects.
+* **Obsidian** for taking notes and writing documentations.
 
 ## Usage
 
