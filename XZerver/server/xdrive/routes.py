@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 from sqlalchemy.sql import text
 from XZerver import config
 from datetime import datetime
-from shutil import disk_usage
+from shutil import disk_usage, rmtree
 import os
 
 xdrive = Blueprint(
@@ -203,3 +203,30 @@ def xdrive_upload():
 			return Response("Success", status=200)
 		return Response("Invalid Path", status=404)
 	return Response("Not Allowed!", status=405)
+
+
+@xdrive.route("/delete", methods=["DELETE"])
+@login_required
+@config.csrf.exempt
+def xdrive_delete():
+	path = request.args.get("path")
+	try:
+		path_root_test = path.split("/")
+		path_root_test.pop(0)
+		if path_root_test[0] == "":
+			raise ValueError("Invalid Path")
+	except:
+		return Response("Not Allowed!", status=405)
+	else:
+		if user_has_write_privilage(path):
+			path = path_sanitizer(path)
+			try:
+				if os.path.isfile(path):
+					os.remove(path)
+				elif os.path.isdir(path):
+					rmtree(path)
+				return Response("Success", status=204)
+			except Exception as e:
+				print("Error:", e)
+				return Response("Invalid Path", status=404)
+		return Response("Not Allowed!", status=405)

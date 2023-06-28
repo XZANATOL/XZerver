@@ -192,7 +192,7 @@ function notifyCardFactory(text){
 }
 
 
-async function uploadItems() {
+async function checkUserWriteAccess() {
 	const uploadEndpoints = `${location.origin}/${location.pathname}`
 	const uploadInput = document.querySelector("#uploadinput").files
 	const locationBar = document.querySelector("input[name='locationbar']").value
@@ -206,6 +206,17 @@ async function uploadItems() {
 	.catch(err => {
 		notifyCardFactory(`Error: ${err}`)
 	})
+
+	return checkWriteAccess
+}
+
+
+async function uploadItems() {
+	const uploadEndpoints = `${location.origin}/${location.pathname}`
+	const uploadInput = document.querySelector("#uploadinput").files
+	const locationBar = document.querySelector("input[name='locationbar']").value
+
+	let checkWriteAccess = await checkUserWriteAccess()
 
 	if (!checkWriteAccess.access){
 		notifyCardFactory("You don't have write access to this directory")
@@ -252,6 +263,51 @@ async function uploadItems() {
 }
 
 
+function deleteSelected() {
+	const deleteEndpoint = `${location.origin}/${location.pathname}delete?path=`
+	const locationBar = document.querySelector("input[name='locationbar']").value
+	global_selected.forEach(async item => {
+		let res = await fetch(`${deleteEndpoint}${locationBar}${item}`, {
+			method: "DELETE",
+			credentials: "same-origin"
+		}).catch((err) => {
+			notifyCardFactory(`Error: ${err}`)
+		})
+		hideContextMenu()
+		getSharedItems("")
+	})
+}
+
+
+async function showContextMenu(event) {
+	let contextMenu = document.querySelector(".context-menu")
+	let deleteButton = contextMenu.querySelector("#deleteSelected")
+	const left = event.clientX + "px"
+	const top = event.clientY + "px"
+
+	const checkWriteAccess = await checkUserWriteAccess()
+	if (checkWriteAccess.access){
+		deleteButton.classList.remove("hidden")
+	}else{
+		if(!deleteButton.classList.contains("hidden")){
+			deleteButton.classList.add("hidden")
+		}
+	}
+
+	contextMenu.style.left = left
+	contextMenu.style.top = top
+	contextMenu.classList.remove("hidden")
+}
+
+
+function hideContextMenu() {
+	let contextMenu = document.querySelector(".context-menu")
+	if(!contextMenu.classList.contains("hidden")){
+		contextMenu.classList.add("hidden")
+	}
+}
+
+
 function addOnStartEventListeners() {
 	// Responsive Upload Section
 	let uploadLabel = document.querySelector("label[for='uploadinput']")
@@ -265,6 +321,23 @@ function addOnStartEventListeners() {
 		uploadLabel.innerText = `Selected ${uploadInput.files.length} files`
 	})
 	uploadButton.addEventListener("click", async (event) => { await uploadItems() })
+
+	// Context Menu Section
+	let fileExplorer = document.querySelector(".file-explorer")
+	let contextMenu = document.querySelector(".context-menu")
+	let deleteButton = contextMenu.querySelector("#deleteSelected")
+	fileExplorer.addEventListener("contextmenu", async (event) => {
+		event.preventDefault()
+		await showContextMenu(event)
+	})
+	fileExplorer.addEventListener("click", (event) => {
+		if(!contextMenu.contains(event.target)){
+			hideContextMenu()
+		}
+	})
+	deleteButton.addEventListener("click", (event) => {
+		deleteSelected()
+	})
 }
 
 

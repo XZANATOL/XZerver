@@ -206,3 +206,26 @@ tbody > tr:is(:hover){
 .hidden{
 	display: none;
 }
+
+
+.context-menu{
+	width: 8rem;
+	min-height: 3em;
+	max-height: 15em;
+	overflow-y: auto;
+
+	background-color: #515D68;
+	position: absolute;
+	border-radius: 8px;
+}
+.context-menu-item{
+	width: 100%;
+	min-height: 3em;
+	border: none;
+
+	background-color: #515D68;
+	transition: 0.2s;
+}
+.context-menu-item:is(:hover, :active, :focus){
+	background-color: #434E57;
+}
