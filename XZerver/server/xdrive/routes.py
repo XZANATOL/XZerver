@@ -205,6 +205,21 @@ def xdrive_upload():
 	return Response("Not Allowed!", status=405)
 
 
+@xdrive.route("/new", methods=["POST"])
+@login_required
+@config.csrf.exempt
+def xdrive_new_folder():
+	path = request.args.get("path")
+	if user_has_write_privilage(path):
+		path = path_sanitizer(path)
+		if os.path.isdir(path) and request.get_json().get("folder_name"):
+			folder_name = request.get_json().get("folder_name")
+			os.mkdir(f"{path}{folder_name}")
+			return Response("Success", status=200)
+		return Response("Invalid Path", status=404)
+	return Response("Not Allowed", status=405)
+
+
 @xdrive.route("/delete", methods=["DELETE"])
 @login_required
 @config.csrf.exempt

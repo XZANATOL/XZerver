@@ -17,7 +17,7 @@ function clearSelections(){
 
 
 async function getSharedItems(path="") {
-	let queryEndpoint = `${location.origin}/${location.pathname}path?path=`
+	let queryEndpoint = `${location.origin}${location.pathname}path?path=`
 
 	let locationBar = document.querySelector("input[name='locationbar']")
 	let directoryPath = "";
@@ -193,7 +193,7 @@ function notifyCardFactory(text){
 
 
 async function checkUserWriteAccess() {
-	const uploadEndpoints = `${location.origin}/${location.pathname}`
+	const uploadEndpoints = `${location.origin}${location.pathname}`
 	const uploadInput = document.querySelector("#uploadinput").files
 	const locationBar = document.querySelector("input[name='locationbar']").value
 
@@ -212,7 +212,7 @@ async function checkUserWriteAccess() {
 
 
 async function uploadItems() {
-	const uploadEndpoints = `${location.origin}/${location.pathname}`
+	const uploadEndpoints = `${location.origin}${location.pathname}`
 	const uploadInput = document.querySelector("#uploadinput").files
 	const locationBar = document.querySelector("input[name='locationbar']").value
 
@@ -264,7 +264,7 @@ async function uploadItems() {
 
 
 function deleteSelected() {
-	const deleteEndpoint = `${location.origin}/${location.pathname}delete?path=`
+	const deleteEndpoint = `${location.origin}${location.pathname}delete?path=`
 	const locationBar = document.querySelector("input[name='locationbar']").value
 	global_selected.forEach(async item => {
 		let res = await fetch(`${deleteEndpoint}${locationBar}${item}`, {
@@ -279,18 +279,42 @@ function deleteSelected() {
 }
 
 
+function createNewFolder() {
+	const newFolderEndpoint = `${location.origin}${location.pathname}new?path=`
+	const locationBar = document.querySelector("input[name='locationbar']").value
+	const folderName = prompt("Enter new folder name:")
+	let res = fetch(`${newFolderEndpoint}${locationBar}`, {
+		method: "POST",
+		credentials: "same-origin",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({"folder_name": folderName})
+	}).then((res) => {
+		return res
+	}).catch((err) => {
+		notifyCardFactory(`Error: ${err}`)
+	})
+	hideContextMenu()
+	getSharedItems("")
+}
+
+
 async function showContextMenu(event) {
 	let contextMenu = document.querySelector(".context-menu")
 	let deleteButton = contextMenu.querySelector("#deleteSelected")
+	let newFolderButton = contextMenu.querySelector("#newFolder")
 	const left = event.clientX + "px"
 	const top = event.clientY + "px"
 
 	const checkWriteAccess = await checkUserWriteAccess()
 	if (checkWriteAccess.access){
 		deleteButton.classList.remove("hidden")
+		newFolderButton.classList.remove("hidden")
 	}else{
 		if(!deleteButton.classList.contains("hidden")){
 			deleteButton.classList.add("hidden")
+			newFolderButton.classList.add("hidden")
 		}
 	}
 
@@ -326,6 +350,7 @@ function addOnStartEventListeners() {
 	let fileExplorer = document.querySelector(".file-explorer")
 	let contextMenu = document.querySelector(".context-menu")
 	let deleteButton = contextMenu.querySelector("#deleteSelected")
+	let newFolderButton = contextMenu.querySelector("#newFolder")
 	fileExplorer.addEventListener("contextmenu", async (event) => {
 		event.preventDefault()
 		await showContextMenu(event)
@@ -337,6 +362,9 @@ function addOnStartEventListeners() {
 	})
 	deleteButton.addEventListener("click", (event) => {
 		deleteSelected()
+	})
+	newFolderButton.addEventListener("click", (event) => {
+		createNewFolder()
 	})
 }
 

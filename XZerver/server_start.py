@@ -5,7 +5,7 @@ from os import getenv
 
 from XZerver import config
 
-def create_server():
+def create_server(test_config=None):
     """ Flask server factory """
     # Init server
     server = Flask(
@@ -13,14 +13,18 @@ def create_server():
         static_folder='static_global',
         static_url_path='/static_global/'
         )
-    server.config["SECRET_KEY"] = getenv("server_secret_key")
-    server.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./db.sqlite"
-    server.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
-    server.config["REMEMBER_COOKIE_DURATION"] = timedelta(minutes=10)
-    server.config["REMEMBER_COOKIE_REFRESH_EACH_REQUEST"] = True
-    server.config["REMEMBER_COOKIE_SAMESITE"] = None
-    server.config['SESSION_PERMANENT'] = True
-    server.config['MAX_CONTENT_LENGTH'] = 30 * 1024 * 1024 * 1024
+
+    if test_config is None:
+        server.config["SECRET_KEY"] = getenv("server_secret_key")
+        server.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./db.sqlite"
+        server.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
+        server.config["REMEMBER_COOKIE_DURATION"] = timedelta(minutes=10)
+        server.config["REMEMBER_COOKIE_REFRESH_EACH_REQUEST"] = True
+        server.config["REMEMBER_COOKIE_SAMESITE"] = None
+        server.config['SESSION_PERMANENT'] = True
+        server.config['MAX_CONTENT_LENGTH'] = 30 * 1024 * 1024 * 1024
+    else:
+        server.config.from_mapping(test_config)
 
     # Extensions & Config init
     config.init()

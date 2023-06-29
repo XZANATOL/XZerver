@@ -222,6 +222,8 @@ tbody > tr:is(:hover){
 	width: 100%;
 	min-height: 3em;
 	border: none;
+	text-align: left;
+	padding-left: 8px;
 
 	background-color: #515D68;
 	transition: 0.2s;

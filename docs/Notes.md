@@ -19,4 +19,6 @@
 
 * Flask `send_file()` method automatically defines the file size headers, and can be used for resume-able downloads.
 
-* Learned a lot about how servers receive requests through streaming before processing. Temp directories have a lot of benefits when it comes to storing data coming from networks. I'm sure going to write a blog on that.  
+* Learned a lot about how servers receive requests through streaming before processing. Temp directories have a lot of benefits when it comes to storing data coming from networks. I'm sure going to write a blog on that. 
+
+* IDK how I missed this at the first of the project but Flask runner [autoloads](https://github.com/pallets/flask/blob/0c0b31a789f8bfeadcbcf49d1fb38a00624b3065/src/flask/app.py#L925) my `.env` file without me using dotenv module. `:param load_dotenv: Load the nearest :file: '.env' and :file: '.flaskenv'`. This was driving me crazy when I was writing the tests directory, as it errors with no `secret-key` which was only saved in `.env`.

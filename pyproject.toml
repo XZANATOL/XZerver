@@ -13,6 +13,7 @@ dependencies = [
     "Flask-WTF>=1.1.1",
     "email-validator>=2.0.0.post2",
     "python-dotenv>=1.0.0",
+    "pytest>=7.4.0",
 ]
 requires-python = ">=3.10"
 license = {text = "GPL 3.0"}
@@ -20,3 +21,4 @@ license = {text = "GPL 3.0"}
 [tool.pdm.scripts]
 dev = {shell = "flask --app 'XZerver.server_start:create_server' run --debug -p 3000 -h 0.0.0.0"}
 db_migrate = {cmd = "python database.py"}
+test = {cmd = "pytest -s"}
