@@ -39,7 +39,7 @@ The structure is built with something similar to Django where apps are saved in 
 
 ```
 $ pdm install
-$ echo App still in development.
+$ echo Admin is initialized by: admin@gmail.com | admin123
 $ pdm run db_migrate
 $ pdm run dev
 ```

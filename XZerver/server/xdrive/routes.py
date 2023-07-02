@@ -8,6 +8,7 @@ from XZerver import config
 from datetime import datetime
 from shutil import disk_usage, rmtree
 import os
+import re
 
 xdrive = Blueprint(
 	'xdrive', __name__, 
@@ -20,7 +21,9 @@ xdrive = Blueprint(
 def path_sanitizer(path) -> str:
 	""" Sanitizing path before processing to avoid SQL Injection & Path Traversal. """
 	try:
-		path = path.replace("../", "").replace("..", "").split("/")
+		# Remove any `..` that means parent directory
+		path = re.sub(r"\.\./*$", "", path)
+		path = re.sub(r"/\.\./", "/", path).split("/")
 		path_from_db = int(path.pop(0))
 		path = "/".join(path)
 
@@ -228,7 +231,7 @@ def xdrive_delete():
 	try:
 		path_root_test = path.split("/")
 		path_root_test.pop(0)
-		if path_root_test[0] == "":
+		if path_root_test[0] in ["", ".."]:
 			raise ValueError("Invalid Path")
 	except:
 		return Response("Not Allowed!", status=405)

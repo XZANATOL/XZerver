@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_login import LoginManager
 from datetime import timedelta
-from os import getenv
+from os import getenv, urandom
 
 from XZerver import config
 
@@ -15,7 +15,7 @@ def create_server(test_config=None):
         )
 
     if test_config is None:
-        server.config["SECRET_KEY"] = getenv("server_secret_key")
+        server.config["SECRET_KEY"] = getenv("server_secret_key") if getenv("server_secret_key") else urandom(64)
         server.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./db.sqlite"
         server.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
         server.config["REMEMBER_COOKIE_DURATION"] = timedelta(minutes=10)

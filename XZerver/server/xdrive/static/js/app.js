@@ -93,15 +93,18 @@ function updateExplorer(records, stats){
 		}
 
 		let checkboxColumn = document.createElement("td")
-		checkbox = document.createElement("input")
-		checkbox.type = "checkbox"
-		checkbox.name = "selected"
-		checkbox.id = record.path
-		checkbox.addEventListener("click", (event) => {
-			checkedItemChecker(event.target)
-			event.stopPropagation() 
-		})
-		checkboxColumn.appendChild(checkbox)
+		if(record.name != ".."){
+			checkbox = document.createElement("input")
+			checkbox.type = "checkbox"
+			checkbox.name = "selected"
+			checkbox.id = record.path
+			checkbox.addEventListener("click", (event) => {
+				checkedItemChecker(event.target)
+				event.stopPropagation() 
+			})
+			checkboxColumn.appendChild(checkbox)
+		}
+
 
 		const nameColumn = tableCellCreator(record.name)
 		const typeColumn = tableCellCreator(record.type)

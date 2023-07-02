@@ -9,7 +9,7 @@ from XZerver import config
 from dotenv import load_dotenv
 from os import getenv
 
-load_dotenv()
+load_dotenv(dotenv_path="./.flask.env")
 
 def make_db(server) -> None:
 	with server.app_context():
