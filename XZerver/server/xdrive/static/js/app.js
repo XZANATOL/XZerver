@@ -17,6 +17,7 @@ function clearSelections(){
 
 
 async function getSharedItems(path="") {
+	global_selected.clear()
 	let queryEndpoint = `${location.origin}${location.pathname}path?path=`
 
 	let locationBar = document.querySelector("input[name='locationbar']")
@@ -93,8 +94,9 @@ function updateExplorer(records, stats){
 		}
 
 		let checkboxColumn = document.createElement("td")
+		
 		if(record.name != ".."){
-			checkbox = document.createElement("input")
+			let checkbox = document.createElement("input")	
 			checkbox.type = "checkbox"
 			checkbox.name = "selected"
 			checkbox.id = record.path
@@ -104,7 +106,6 @@ function updateExplorer(records, stats){
 			})
 			checkboxColumn.appendChild(checkbox)
 		}
-
 
 		const nameColumn = tableCellCreator(record.name)
 		const typeColumn = tableCellCreator(record.type)
@@ -122,8 +123,10 @@ function updateExplorer(records, stats){
 			if(event.detail == 1){
 				clearSelections()
 				let checkbox = tableRow.querySelector(`input`)
-				checkbox.checked = true
-				checkedItemChecker(checkbox)
+				if(checkbox){
+					checkbox.checked = true
+					checkedItemChecker(checkbox)
+				}
 			}else{
 				if(event.target.tagName == "TD"){
 					if(event.target.parentElement.childNodes[2].innerText == "dir"){
