@@ -18,7 +18,7 @@ def server():
 
 	server = create_server({
 		# Only necessary config
-		"SECRET_KEY": os.getenv("server_secret_key"),
+		"SECRET_KEY": os.getenv("server_secret_key") if os.getenv("server_secret_key") else os.urandom(64),
 		"TESTING": True,
 		"WTF_CSRF_ENABLED": False,
 		"SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",

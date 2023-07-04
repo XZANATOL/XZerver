@@ -19,6 +19,6 @@ requires-python = ">=3.10"
 license = {text = "GPL 3.0"}
 
 [tool.pdm.scripts]
-dev = {shell = "flask --app 'XZerver.server_start:create_server' run --debug -p 3000 -h 0.0.0.0"}
+dev = {shell = "flask --app XZerver.server_start:create_server run --debug -p 3000 -h 0.0.0.0"}
 db_migrate = {cmd = "python database.py"}
 test = {cmd = "pytest -s"}
