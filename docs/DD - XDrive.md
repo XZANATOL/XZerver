@@ -29,4 +29,8 @@ App works as follows:
 
 4) Double click a file to download.
 
-5) **Not Implemented Yet** Context menu that has options as `[Bulk delete, Open files instead of downloading]`.
+5) Select items using checkboxes and choose `Delete Selected` from the context menu to bulk delete them.
+
+6) Create a New Folder using the `New Folder` option in the context menu.
+
+7) **To Be Added:** Rename feature / Download folder as zip.
