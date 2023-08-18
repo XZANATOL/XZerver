@@ -43,6 +43,7 @@ def path_sanitizer(path) -> str:
 	except:
 		directory = ""
 	finally:
+		directory = directory.replace("%20", " ")
 		return directory
 
 
@@ -120,7 +121,7 @@ def file_explorer():
 				"dt_modified": "-"
 				})
 	else:
-		path = request.args.get("path")
+		path = re.search("path=(.+)", request.url)[1]
 		directory_abs_path = path_sanitizer(path)
 		try:
 			if os.path.isdir(directory_abs_path):
@@ -173,7 +174,7 @@ def file_explorer():
 @xdrive.route("/download", methods=["GET"])
 @login_required
 def xdrive_download():
-	path = request.args.get("path")
+	path = re.search("path=(.+)", request.url)[1]
 	path = path_sanitizer(path)
 	if os.path.isfile(path):
 		return send_file(path)
@@ -189,7 +190,7 @@ def has_write_access():
 	* Same check will be done in the upload view
 	to avoid malicious approaches to the API. 
 	"""
-	path = request.args.get("path")
+	path = re.search("path=(.+)", request.url)[1]
 	return {"access": user_has_write_privilage(path)}
 
 
@@ -197,7 +198,7 @@ def has_write_access():
 @login_required
 @config.csrf.exempt
 def xdrive_upload():
-	path = request.args.get("path")
+	path = re.search("path=(.+)", request.url)[1]
 	if user_has_write_privilage(path):
 		path = path_sanitizer(path)
 		if os.path.isdir(path) and "file" in request.files:
@@ -212,7 +213,7 @@ def xdrive_upload():
 @login_required
 @config.csrf.exempt
 def xdrive_new_folder():
-	path = request.args.get("path")
+	path = re.search("path=(.+)", request.url)[1]
 	if user_has_write_privilage(path):
 		path = path_sanitizer(path)
 		if os.path.isdir(path) and request.get_json().get("folder_name"):
@@ -227,7 +228,7 @@ def xdrive_new_folder():
 @login_required
 @config.csrf.exempt
 def xdrive_delete():
-	path = request.args.get("path")
+	path = re.search("path=(.+)", request.url)[1]
 	try:
 		path_root_test = path.split("/")
 		path_root_test.pop(0)

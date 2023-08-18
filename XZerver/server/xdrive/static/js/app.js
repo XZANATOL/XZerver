@@ -88,7 +88,9 @@ function updateExplorer(records, stats){
 
 	records.forEach( record => {
 		if(record.type == "dir"){
-			folderCount += 1
+			if(record.name != ".."){
+				folderCount += 1
+			}
 		}else{
 			fileCount += 1
 		}
