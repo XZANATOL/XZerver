@@ -11,6 +11,9 @@ Currently, I'm planning of adding a file-sharing app like Google Drive but with 
 * Battery software, where there are features I won't use anyway.
 * Wanted customized features with some personalized settings.
 
+## Demo Video
+https://github.com/XZANATOL/XZerver/assets/64689436/ace987ec-50eb-4d28-a4a9-aec1ea10f14d
+
 ## Tools
 
 * **Python** because I'm more comfortable using it in OOP.
