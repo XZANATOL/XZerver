@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block header %}
+{{ super() }}
+<script src="/ssh/static/js/socket.io.4.7.2.js"></script>
+<script src="/ssh/static/js/xterm/xterm.js"></script>
+<script src="/static_global/js/notify.js" defer></script>
+<script src="/ssh/static/js/ssh.js" defer></script>
+
+<link rel="stylesheet" href="/ssh/static/css/ssh.css">
+<link rel="stylesheet" href="/ssh/static/css/xterm.css">
+
+<title>XSSH - XZerver</title>
+{% endblock %}
+
+{% block body %}
+<main>
+	<section class="connection_bar">
+		<form onsubmit="SSHConnectionStart(event, this);">
+			<input name="hostname" placeholder="hostname *" type="text" required>
+			<input name="port" placeholder="port (default: 22)" type="number" min="0" max="65535">
+			<input name="username" placeholder="username *" type="text" required>
+			<input name="password" placeholder="password *" type="password" required>
+			<button type="submit">Connect</button>
+		</form>
+	</section>
+	<section class="terminal"></section>
+	<section class="flash-panel">
+	</section>
+</main>
+{% endblock %}

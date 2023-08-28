@@ -27,19 +27,19 @@ def create_server(test_config=None):
         server.config.from_mapping(test_config)
 
     # Extensions & Config init
-    config.init()
-    config.db.init_app(server)
-    config.csrf.init_app(server)
+    config.init(server)
 
     # from path.file import Blueprint as X
     from XZerver.server.home.routes import home as home_blueprint
     from XZerver.server.auth.routes import auth as auth_blueprint
     from XZerver.server.xdrive.routes import xdrive as xdrive_blueprint
+    from XZerver.server.xssh.routes import xssh as xssh_blueprint
 
     blueprints = [
         home_blueprint,
         auth_blueprint,
-        xdrive_blueprint
+        xdrive_blueprint,
+        xssh_blueprint
     ]
 
     for blueprint in blueprints:
